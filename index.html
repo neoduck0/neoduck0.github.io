@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LexBridge: Affordable AI-powered legal help. Connect with vetted lawyers via video, audio, or chat. Free tier available.">
+    <title>LexBridge | Affordable Legal Help, Instantly</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ========== 🎨 60-30-10 COLOR SYSTEM ========== */
+        :root {
+            /* 60% DOMINANT: Backgrounds */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #f1f5f9;
+            
+            /* 30% SECONDARY: UI Surfaces */
+            --surface-card: #ffffff;
+            --surface-elevated: #ffffff;
+            --border-subtle: #e2e8f0;
+            --border-focus: #94a3b8;
+            
+            /* 10% ACCENT: Actions & Highlights */
+            --accent-primary: #0f172a;
+            --accent-hover: #1e293b;
+            --accent-glow: rgba(15, 23, 42, 0.15);
+            
+            /* Text Colors */
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-inverse: #ffffff;
+            --text-muted: #64748b;
+            
+            /* Feedback & Status */
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            
+            /* Shadows & Effects */
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.08);
+            --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.12);
+            --shadow-accent: 0 8px 30px var(--accent-glow);
+            
+            /* Spacing & Radius */
+            --radius-sm: 12px;
+            --radius-md: 24px;
+            --radius-lg: 40px;
+            --radius-full: 999px;
+            --container-padding: 1.5rem;
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-smooth: 300ms cubic-bezier(0.2, 0.9, 0.4, 1);
+            --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Dark Mode Overrides */
+        body.dark {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-tertiary: #1c1c1e;
+            --surface-card: #18181b;
+            --surface-elevated: #27272a;
+            --border-subtle: #2c2c2e;
+            --border-focus: #52525b;
+            --accent-primary: #f5f5f7;
+            --accent-hover: #e4e4e7;
+            --accent-glow: rgba(245, 245, 247, 0.12);
+            --text-primary: #f5f5f7;
+            --text-secondary: #a1a1aa;
+            --text-inverse: #0a0a0a;
+            --text-muted: #71717a;
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.3);
+            --shadow-md: 0 10px 25px -5px rgba(0,0,0,0.4);
+            --shadow-lg: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        /* ========== 🧱 BASE & ACCESSIBILITY ========== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background var(--transition-fast), color var(--transition-fast);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Focus Visible for Keyboard Users */
+        :focus-visible {
+            outline: 2px solid var(--border-focus);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+
+        /* Skip Link for Accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+            padding: 0.5rem 1rem;
+            z-index: 1000;
+            transition: top var(--transition-fast);
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+        }
+
+        /* ========== 📝 TYPOGRAPHY ========== */
+        h1, h2, h3, h4 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            margin-bottom: 1.25rem;
+        }
+
+        h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            margin-bottom: 0.5rem;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            max-width: 65ch;
+        }
+
+        .section {
+            padding: clamp(3rem, 8vw, 5rem) 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            margin: 0 auto;
+        }
+
+        /* ========== 🔘 BUTTONS ========== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.75rem;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all var(--transition-smooth);
+            border: none;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+            box-shadow: var(--shadow-accent);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* ========== 🧭 NAVBAR ========== */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 0;
+            transition: background var(--transition-fast);
+        }
+
+        body.dark .navbar {
+            background: rgba(10,10,10,0.85);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            font-size: 1.3rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: var(--text-primary);
+            padding: 0.4rem 0.6rem;
+            border-radius: var(--radius-sm);
+            transition: background var(--transition-fast), color var(--transition-fast);
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background: var(--bg-tertiary);
+            color: var(--accent-primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-full);
+            padding: 0.4rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all var(--transition-fast);
+            min-width: 44px;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-secondary);
+        }
+
+        .theme-toggle i {
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 0.4rem;
+            min-width: 44px;
+            min-height: 44px;
+            border-radius: var(--radius-sm);
+        }
+
+        .menu-toggle:hover {
+            background: var(--bg-tertiary);
+        }
+
+        /* ========== 🦸 HERO SECTION ========== */
+        .hero {
+            padding: clamp(3rem, 10vw, 6rem) 0 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            animation: fadeInUp 0.7s ease 0.15s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.7s ease 0.3s both;
+        }
+
+        .hero-trust {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.7s ease 0.45s both;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .trust-item i {
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== 💊 VALUE PILLS ========== */
+        .value-pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 2rem 0;
+        }
+
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            padding: 0.5rem 1.1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .pill:hover {
+            border-color: var(--accent-primary);
+            background: var(--bg-tertiary);
+            transform: translateY(-2px);
+        }
+
+        .pill i {
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+        }
+
+        /* ========== 🃏 CARDS GRID ========== */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.75rem;
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.25rem;
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            transition: transform var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+        }
+
+        .card:hover .card-icon {
+            transform: scale(1.05);
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+
+        .card-tag {
+            display: inline-block;
+            background: var(--bg-tertiary);
+            padding: 0.25rem 0.6rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .card-tag.free {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .card-tag.ai {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--info);
+        }
+
+        .card-tag.pro {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        /* ========== 🤖 AI WIDGET ========== */
+        .ai-widget {
+            background: var(--surface-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2.5rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .widget-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .widget-title i {
+            color: var(--accent-primary);
+            font-size: 1.4rem;
+        }
+
+        .widget-controls {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .widget-select {
+            padding: 0.7rem 1.2rem;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            min-width: 200px;
+            cursor: pointer;
+            transition: border-color var(--transition-fast);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2.5rem;
+        }
+
+        .widget-select:focus {
+            border-color: var(--accent-primary);
+            outline: none;
+        }
+
+        .widget-result {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: 1.2rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border-left: 3px solid var(--accent-primary);
+            display: none;
+        }
+
+        .widget-result.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .widget-result.loading {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ========== 📋 STEPS ========== */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+            counter-reset: step;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            padding-top: 3rem;
+        }
+
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 48px;
+            height: 48px;
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-accent);
+        }
+
+        .step-icon {
+            font-size: 2rem;
+            color: var(--accent-primary);
+            margin: 1rem 0;
+            display: block;
+        }
+
+        /* ========== 📊 STATS ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .stat {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            line-height: 1;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-number::after {
+            content: '+';
+            font-size: 1.2rem;
+            vertical-align: super;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        /* ========== 💰 PRICING ========== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            align-items: start;
+        }
+
+        .price-card {
+            background: var(--surface-card);
+            border: 2px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            transition: all var(--transition-smooth);
+            position: relative;
+        }
+
+        .price-card.featured {
+            border-color: var(--accent-primary);
+            box-shadow: var(--shadow-lg);
+            transform: scale(1.03);
+            z-index: 2;
+        }
+
+        .price-card.featured::after {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+            padding: 0.3rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .price-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+        }
+
+        .price-card.featured:hover {
+            transform: scale(1.03) translateY(-4px);
+        }
+
+        .price-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .price {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            line-height: 1;
+            margin: 1rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        .price-features {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .price-features li {
+            padding: 0.4rem 0;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .price-features li i {
+            color: var(--success);
+            font-size: 0.9rem;
+            min-width: 1rem;
+        }
+
+        .price-card .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .pricing-note {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .pricing-note i {
+            color: var(--success);
+            margin-right: 0.3rem;
+        }
+
+        /* ========== 💬 TESTIMONIAL ========== */
+        .testimonial {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            text-align: center;
+            border: 1px solid var(--border-subtle);
+            margin: 2rem 0;
+        }
+
+        .testimonial-quote {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .testimonial-quote::before,
+        .testimonial-quote::after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--accent-primary);
+            opacity: 0.15;
+            position: absolute;
+            line-height: 1;
+        }
+
+        .testimonial-quote::before {
+            top: -1rem;
+            left: -0.5rem;
+        }
+
+        .testimonial-quote::after {
+            bottom: -2rem;
+            right: -0.5rem;
+            transform: rotate(180deg);
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .testimonial-role {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-full);
+            background: var(--bg-tertiary);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: 600;
+            color: var(--accent-primary);
+        }
+
+        /* ========== 📚 CASE STUDY (Portfolio Section) ========== */
+        .case-study {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            margin: 3rem 0;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .case-study-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .case-badge {
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .case-study-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .case-item {
+            background: var(--surface-card);
+            padding: 1.2rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .case-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .case-item h4 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .case-item h4 i {
+            color: var(--accent-primary);
+        }
+
+        .case-item p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .tech-pill {
+            background: var(--bg-tertiary);
+            padding: 0.3rem 0.7rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .tech-pill i {
+            font-size: 0.85rem;
+        }
+
+        /* ========== 🦶 FOOTER ========== */
+        footer {
+            background: var(--bg-secondary);
+            padding: 3rem 0 2rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-brand {
+            max-width: 280px;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 1rem;
+            display: inline-flex;
+        }
+
+        .footer-brand p {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+        }
+
+        .social-links a:hover {
+            background: var(--accent-primary);
+            color: var(--text-inverse);
+            transform: translateY(-2px);
+        }
+
+        .footer-links h4 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .footer-links a {
+            display: block;
+            padding: 0.3rem 0;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .footer-bottom a {
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== ✨ ANIMATIONS ========== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        /* ========== 📱 RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                padding: 1rem 0;
+                border-top: 1px solid var(--border-subtle);
+                margin-top: 1rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .price-card.featured {
+                transform: scale(1);
+            }
+
+            .price-card.featured:hover {
+                transform: translateY(-4px);
+            }
+
+            .widget-controls {
+                width: 100%;
+                flex-direction: column;
+            }
+
+            .widget-select {
+                width: 100%;
+            }
+
+            .case-study-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========== 🧩 UTILITY CLASSES ========== */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .mb-1 { margin-bottom: 0.5rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .mb-3 { margin-bottom: 1.5rem; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mt-2 { margin-top: 1rem; }
+        .mt-3 { margin-top: 1.5rem; }
+        .mt-4 { margin-top: 2rem; }
+        .flex { display: flex; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+        .gap-3 { gap: 1.5rem; }
+        .hidden { display: none; }
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Accessibility: Skip Link -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container nav-container">
+        <a href="#" class="logo" aria-label="LexBridge Home">
+            <i class="fas fa-scale-balanced"></i>
+            LexBridge
+        </a>
+        
+        <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="nav-links" id="navLinks">
+            <a href="#features">Features</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#impact">Impact</a>
+            <a href="#case-study">Case Study</a>
+        </div>
+        
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                <i class="fas fa-sun" id="sunIcon"></i>
+                <i class="fas fa-moon" id="moonIcon" style="display:none"></i>
+            </button>
+            <a href="#get-started" class="btn btn-primary">Get Started</a>
+        </div>
+    </div>
+</nav>
+
+<main id="main-content">
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-sparkles"></i>
+                AI + Human Lawyers • From $19
+            </div>
+            
+            <h1>
+                Legal help that's <span class="highlight">affordable</span>, 
+                <span class="highlight">fast</span>, and <span class="highlight">human</span>
+            </h1>
+            
+            <p>
+                Connect with vetted lawyers in minutes. Video, audio, or text consultations. 
+                AI document review. Free tier available. Justice shouldn't cost a fortune.
+            </p>
+            
+            <div class="hero-cta">
+                <a href="#get-started" class="btn btn-primary pulse">
+                    <i class="fas fa-bolt"></i>
+                    Find a Lawyer Now
+                </a>
+                <a href="#demo" class="btn btn-outline">
+                    <i class="fas fa-play-circle"></i>
+                    Try AI Matcher
+                </a>
+            </div>
+            
+            <div class="hero-trust">
+                <div class="trust-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>1,240+ verified lawyers</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>End-to-end encryption</span>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>98% satisfaction rate</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VALUE PROPS -->
+    <div class="container">
+        <div class="value-pills">
+            <span class="pill"><i class="fas fa-dollar-sign"></i> From $19</span>
+            <span class="pill"><i class="fas fa-clock"></i> Match in 2 min</span>
+            <span class="pill"><i class="fas fa-lock"></i> 100% Private</span>
+            <span class="pill"><i class="fas fa-star"></i> Vetted Experts</span>
+            <span class="pill"><i class="fas fa-gift"></i> Free Tier</span>
+            <span class="pill"><i class="fas fa-video"></i> Video/Audio/Text</span>
+        </div>
+    </div>
+
+    <!-- FEATURES -->
+    <section id="features" class="section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Everything you need for legal peace of mind</h2>
+                <p>Powerful tools designed for real people, not just corporations</p>
+            </div>
+            
+            <div class="grid">
+                <article class="card reveal">
+                    <span class="card-tag ai"><i class="fas fa-robot"></i> AI-Powered</span>
+                    <div class="card-icon"><i class="fas fa-brain"></i></div>
+                    <h3>AI Case Triage</h3>
+                    <p>Describe your issue in plain English. Our AI analyzes it and routes you to the right expert instantly.</p>
+                </article>
+                
+                <article class="card reveal">
+                    <span class="card-tag"><i class="fas fa-handshake"></i> Smart Matching</span>
+                    <div class="card-icon"><i class="fas fa-bullseye"></i></div>
+                    <h3>Perfect Lawyer Match</h3>
+                    <p>Get matched with lawyers based on expertise, budget, availability, and client reviews — no guesswork.</p>
+                </article>
+                
+                <article class="card reveal">
+                    <span class="card-tag pro"><i class="fas fa-video"></i> Video Consult</span>
+                    <div class="card-icon"><i class="fas fa-video"></i></div>
+                    <h3>HD Video Calls</h3>
+                    <p>Secure, encrypted video consultations. Share screens, review documents together, face-to-face advice from anywhere.</p>
+                </article>
+                
+                <article class="card reveal">
+                    <span class="card-tag"><i class="fas fa-phone"></i> Audio Option</span>
+                    <div class="card-icon"><i class="fas fa-phone-volume"></i></div>
+                    <h3>Phone Consultations</h3>
+                    <p>Prefer voice-only? Schedule phone calls at lower rates. Perfect for quick questions or limited bandwidth.</p>
+                </article>
+                
+                <article class="card reveal">
+                    <span class="card-tag"><i class="fas fa-comment"></i> Text/Chat</span>
+                    <div class="card-icon"><i class="fas fa-comments"></i></div>
+                    <h3>Async Messaging</h3>
+                    <p>Send questions anytime via encrypted chat. Get responses within 24 hours. Ideal for non-urgent matters.</p>
+                </article>
+                
+                <article class="card reveal">
+                    <span class="card-tag ai"><i class="fas fa-file-contract"></i> AI Doc Review</span>
+                    <div class="card-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <h3>AI Document Assistant</h3>
+                    <p>Upload contracts or legal docs. AI flags issues, suggests edits, explains terms in plain English — instantly, free or $19.</p>
+                </article>
+                
+                <article class="card reveal">
+                    <span class="card-tag pro"><i class="fas fa-user-check"></i> Human Review</span>
+                    <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+                    <h3>Real Lawyer Review</h3>
+                    <p>Need expert eyes? Real attorneys review your documents with detailed feedback, redlines, and legal advice. From $49.</p>
+                </article>
+                
+                <article class="card reveal">
+                    <span class="card-tag"><i class="fas fa-shield-alt"></i> Security</span>
+                    <div class="card-icon"><i class="fas fa-lock"></i></div>
+                    <h3>End-to-End Encryption</h3>
+                    <p>Your legal matters are private. All communications, documents, and calls are encrypted with bank-level security.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI DEMO WIDGET -->
+    <div class="container">
+        <div class="ai-widget reveal" id="demo">
+            <div class="widget-header">
+                <div class="widget-title">
+                    <i class="fas fa-wand-magic-sparkles float"></i>
+                    Try the AI Lawyer Matcher
+                </div>
+                <div class="widget-controls">
+                    <select class="widget-select" id="issueSelect" aria-label="Select legal issue">
+                        <option value="">Choose your legal issue...</option>
+                        <option value="contract">📄 Contract Dispute</option>
+                        <option value="employment">👥 Employment Rights</option>
+                        <option value="startup">🚀 Startup Legal</option>
+                        <option value="ip">™️ IP & Trademark</option>
+                        <option value="family">🏠 Family Law</option>
+                        <option value="immigration">🛂 Immigration</option>
+                        <option value="real-estate">🏡 Real Estate</option>
+                    </select>
+                    <button class="btn btn-primary" id="matchBtn">
+                        <i class="fas fa-search"></i>
+                        Find Experts
+                    </button>
+                </div>
+            </div>
+            
+            <div class="widget-result" id="matchResult" role="status" aria-live="polite">
+                Select an issue above and click "Find Experts" to see AI-matched lawyers.
+            </div>
+        </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>From question to resolution in 4 simple steps</h2>
+                <p>No legal jargon. No runaround. Just results.</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step reveal">
+                    <i class="fas fa-message step-icon"></i>
+                    <h3>1. Describe</h3>
+                    <p>Tell us about your situation in simple terms. AI analyzes your case instantly.</p>
+                </div>
+                <div class="step reveal">
+                    <i class="fas fa-bolt step-icon"></i>
+                    <h3>2. Match</h3>
+                    <p>AI finds the best lawyers for your needs, budget, and timeline. See profiles & reviews.</p>
+                </div>
+                <div class="step reveal">
+                    <i class="fas fa-video step-icon"></i>
+                    <h3>3. Connect</h3>
+                    <p>Choose video, audio, or text. Secure encrypted session. Share docs safely.</p>
+                </div>
+                <div class="step reveal">
+                    <i class="fas fa-check-to-slot step-icon"></i>
+                    <h3>4. Resolve</h3>
+                    <p>Track progress, sign docs digitally, get closure. Post-consultation support included.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="section">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>Simple, transparent pricing</h2>
+                <p>Pay only for what you need. Cancel anytime. No hidden fees.</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="price-card reveal">
+                    <span class="card-tag free">FREE FOREVER</span>
+                    <h3>Starter</h3>
+                    <div class="price">$0<span>/forever</span></div>
+                    <ul class="price-features">
+                        <li><i class="fas fa-check"></i> AI case assessment</li>
+                        <li><i class="fas fa-check"></i> Basic document templates</li>
+                        <li><i class="fas fa-check"></i> Community Q&A forum</li>
+                        <li><i class="fas fa-check"></i> Lawyer directory access</li>
+                        <li><i class="fas fa-check"></i> 1 AI doc review/month</li>
+                    </ul>
+                    <button class="btn btn-outline">Get Started Free</button>
+                </div>
+                
+                <div class="price-card featured reveal">
+                    <span class="card-tag pro">BEST VALUE</span>
+                    <h3>Pro Plan</h3>
+                    <div class="price">$29<span>/month</span></div>
+                    <ul class="price-features">
+                        <li><i class="fas fa-check"></i> Everything in Starter</li>
+                        <li><i class="fas fa-check"></i> 1 video consult/month ($79 value)</li>
+                        <li><i class="fas fa-check"></i> Priority AI matching</li>
+                        <li><i class="fas fa-check"></i> Advanced document tools</li>
+                        <li><i class="fas fa-check"></i> Case progress tracker</li>
+                        <li><i class="fas fa-check"></i> 24/7 chat support</li>
+                    </ul>
+                    <button class="btn btn-primary">Start 14-Day Free Trial</button>
+                </div>
+                
+                <div class="price-card reveal">
+                    <span class="card-tag">PAY AS YOU GO</span>
+                    <h3>Flexible</h3>
+                    <div class="price">From $19<span></span></div>
+                    <ul class="price-features">
+                        <li><i class="fas fa-check"></i> Video consult: $49</li>
+                        <li><i class="fas fa-check"></i> Audio consult: $39</li>
+                        <li><i class="fas fa-check"></i> Text chat: $29/session</li>
+                        <li><i class="fas fa-check"></i> AI doc review: $19</li>
+                        <li><i class="fas fa-check"></i> Human doc review: $49+</li>
+                        <li><i class="fas fa-check"></i> No subscription needed</li>
+                    </ul>
+                    <button class="btn btn-outline">Buy Credits</button>
+                </div>
+            </div>
+            
+            <p class="pricing-note">
+                <i class="fas fa-heart"></i>
+                We keep commissions low (5% vs industry 25-40%) so more of your money goes to justice, not overhead.
+            </p>
+        </div>
+    </section>
+
+    <!-- IMPACT STATS -->
+    <div class="container" id="impact">
+        <div class="stats-grid reveal">
+            <div class="stat">
+                <div class="stat-number" data-target="15280">0</div>
+                <div class="stat-label">Legal issues resolved</div>
+                <i class="fas fa-gavel stat-icon"></i>
+            </div>
+            <div class="stat">
+                <div class="stat-number" data-target="1240">0</div>
+                <div class="stat-label">Verified lawyers</div>
+                <i class="fas fa-user-graduate stat-icon"></i>
+            </div>
+            <div class="stat">
+                <div class="stat-number" data-target="98">0</div>
+                <div class="stat-label">% satisfaction rate</div>
+                <i class="fas fa-smile stat-icon"></i>
+            </div>
+            <div class="stat">
+                <div class="stat-number" data-target="85">0</div>
+                <div class="stat-label">% cost savings</div>
+                <i class="fas fa-piggy-bank stat-icon"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- TESTIMONIAL -->
+    <div class="container">
+        <div class="testimonial reveal">
+            <div class="testimonial-avatar">SM</div>
+            <div class="testimonial-quote">
+                LexBridge helped me resolve a contract dispute in 48 hours for under $100. 
+                I didn't think affordable legal help was possible. The video call with my lawyer was smooth and professional.
+            </div>
+            <div class="testimonial-author">Sarah M.</div>
+            <div class="testimonial-role">Freelance Designer • Used Video Consult</div>
+        </div>
+    </div>
+
+    <!-- PORTFOLIO CASE STUDY -->
+    <section id="case-study" class="section">
+        <div class="container">
+            <div class="case-study reveal">
+                <div class="case-study-header">
+                    <span class="case-badge">Live Platform • Portfolio Case Study</span>
+                    <h3 style="margin:0">How LexBridge Democratizes Legal Access</h3>
+                </div>
+                <p style="margin-bottom:1.5rem; font-size: 1.05rem;">
+                    LexBridge is a working platform that connects people with affordable legal help through AI + human lawyers. 
+                    Here's how we're breaking down barriers to justice:
+                </p>
+                
+                <div class="case-study-grid">
+                    <div class="case-item">
+                        <h4><i class="fas fa-robot"></i> AI-Powered Matching</h4>
+                        <p>Smart algorithm analyzes your case in seconds and matches you with the right lawyer based on expertise, budget, and availability.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-dollar-sign"></i> Affordable Access</h4>
+                        <p>Consultations from $19. Subscription plans from $29/month. Only 5% commission (vs industry 25-40%). Justice for all budgets.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-gift"></i> Free Tier Available</h4>
+                        <p>Free AI case assessment, basic templates, community Q&A, and lawyer directory. Legal help shouldn't require a credit card to start.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-video"></i> Video Consultations</h4>
+                        <p>HD encrypted video calls with lawyers. Share screens, review documents together, get face-to-face advice from anywhere.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-phone"></i> Audio Call Option</h4>
+                        <p>Prefer voice-only? Schedule phone consultations at lower rates. Perfect for quick questions or when bandwidth is limited.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-comment-dots"></i> Text/Chat Support</h4>
+                        <p>Asynchronous messaging with lawyers. Send questions anytime, get responses within 24 hours. Ideal for non-urgent matters.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-file-contract"></i> AI Document Review</h4>
+                        <p>Upload contracts, NDAs, or legal docs. AI flags issues, suggests edits, explains terms in plain English—instantly, free or $19.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-user-check"></i> Human Lawyer Review</h4>
+                        <p>Need expert eyes? Real attorneys review your documents with detailed feedback, redlines, and legal advice. Starting at $49.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-shield-alt"></i> End-to-End Encryption</h4>
+                        <p>Your legal matters are private. All communications, documents, and calls are encrypted. Bank-level security protects your information.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-clock"></i> 24/7 Availability</h4>
+                        <p>Legal issues don't keep business hours. Access AI tools anytime. Schedule consultations evenings/weekends. Emergency support available.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-chart-line"></i> Case Progress Tracker</h4>
+                        <p>Track deadlines, milestones, and lawyer responses in one dashboard. Get automated reminders so you never miss a filing date.</p>
+                    </div>
+                    
+                    <div class="case-item">
+                        <h4><i class="fas fa-handshake"></i> Verified Lawyer Network</h4>
+                        <p>Every lawyer is vetted: bar verification, background checks, peer reviews, and client ratings. Quality you can trust.</p>
+                    </div>
+                </div>
+                
+                <!-- Impact Metrics -->
+                <div style="margin-top: 2.5rem; padding: 2rem; background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                    <h4 style="margin-bottom: 1.5rem; text-align: center;"><i class="fas fa-trophy" style="color: var(--accent-primary);"></i> Real Impact, Real People</h4>
+                    <div class="stats-grid" style="margin: 0; background: transparent; padding: 0; border: none;">
+                        <div class="stat">
+                            <div class="stat-number" data-target="15280">0</div>
+                            <div class="stat-label">Cases resolved</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-target="1240">0</div>
+                            <div class="stat-label">Verified lawyers</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-target="98">0</div>
+                            <div class="stat-label">% satisfaction</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number" data-target="85">0</div>
+                            <div class="stat-label">% cost savings</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Technology Stack -->
+                <div style="margin-top: 2rem; padding: 1.5rem; background: var(--surface-card); border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+                    <h4 style="margin-bottom: 1rem;"><i class="fas fa-code" style="color: var(--accent-primary);"></i> Built With Modern Tech</h4>
+                    <div class="tech-stack">
+                        <span class="tech-pill"><i class="fab fa-html5"></i> HTML5 + CSS3</span>
+                        <span class="tech-pill"><i class="fab fa-js"></i> Vanilla JavaScript</span>
+                        <span class="tech-pill"><i class="fas fa-brain"></i> AI/NLP Integration</span>
+                        <span class="tech-pill"><i class="fas fa-video"></i> WebRTC Video</span>
+                        <span class="tech-pill"><i class="fas fa-lock"></i> End-to-End Encryption</span>
+                        <span class="tech-pill"><i class="fas fa-mobile-alt"></i> Responsive Design</span>
+                        <span class="tech-pill"><i class="fas fa-universal-access"></i> WCAG 2.1 AA</span>
+                        <span class="tech-pill"><i class="fas fa-palette"></i> 60-30-10 Color System</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="section" style="background: var(--bg-secondary); border-bottom: none;">
+        <div class="container text-center reveal">
+            <h2>Ready to get affordable legal help?</h2>
+            <p style="max-width: 600px; margin: 0 auto 2rem;">
+                Join thousands who've resolved their legal issues with LexBridge. 
+                Start free. No credit card required.
+            </p>
+            <div class="btn-group" style="justify-content: center;">
+                <a href="#get-started" class="btn btn-primary btn-lg">
+                    <i class="fas fa-bolt"></i>
+                    Get Started Free
+                </a>
+                <a href="#demo" class="btn btn-outline">
+                    <i class="fas fa-play-circle"></i>
+                    Try AI Matcher
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="logo">
+                    <i class="fas fa-scale-balanced"></i>
+                    LexBridge
+                </a>
+                <p>Democratizing legal access through AI + affordable human lawyers. Justice for everyone.</p>
+                <div class="social-links">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Product</h4>
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#demo">AI Demo</a>
+                <a href="#">Security</a>
+                <a href="#">API</a>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <a href="#">Legal Guides</a>
+                <a href="#">Blog</a>
+                <a href="#">Help Center</a>
+                <a href="#">Community</a>
+                <a href="#">Webinars</a>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Contact</a>
+                <a href="#">Press</a>
+                <a href="#case-study">Case Study</a>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2025 LexBridge. Built with ❤️ for justice. <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="#">Accessibility</a></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // ===== THEME TOGGLE WITH LOCAL STORAGE =====
+    const themeToggle = document.getElementById('themeToggle');
+    const sunIcon = document.getElementById('sunIcon');
+    const moonIcon = document.getElementById('moonIcon');
+    
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedTheme = localStorage.getItem('lexbridge-theme');
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.body.classList.add('dark');
+        sunIcon.style.display = 'none';
+        moonIcon.style.display = 'inline';
+    }
+    
+    themeToggle.addEventListener('click', () => {
+        const isDark = document.body.classList.toggle('dark');
+        sunIcon.style.display = isDark ? 'none' : 'inline';
+        moonIcon.style.display = isDark ? 'inline' : 'none';
+        localStorage.setItem('lexbridge-theme', isDark ? 'dark' : 'light');
+    });
+
+    // ===== MOBILE MENU TOGGLE =====
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.getElementById('navLinks');
+    
+    menuToggle.addEventListener('click', () => {
+        const expanded = menuToggle.getAttribute('aria-expanded') === 'true';
+        menuToggle.setAttribute('aria-expanded', !expanded);
+        navLinks.classList.toggle('active');
+        menuToggle.innerHTML = expanded ? 
+            '<i class="fas fa-bars"></i>' : 
+            '<i class="fas fa-xmark"></i>';
+    });
+
+    // Close mobile menu when clicking a link
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            if (navLinks.classList.contains('active')) {
+                navLinks.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        });
+    });
+
+    // ===== SCROLL REVEAL ANIMATIONS =====
+    const revealElements = document.querySelectorAll('.reveal');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // ===== STATS COUNTER ANIMATION =====
+    const statNumbers = document.querySelectorAll('.stat-number');
+    
+    const animateCounter = (el, target) => {
+        let current = 0;
+        const increment = Math.ceil(target / 50);
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                el.textContent = target.toLocaleString();
+                clearInterval(timer);
+            } else {
+                el.textContent = current.toLocaleString();
+            }
+        }, 30);
+    };
+    
+    const statsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const el = entry.target;
+                const target = parseInt(el.dataset.target);
+                animateCounter(el, target);
+                statsObserver.unobserve(el);
+            }
+        });
+    }, { threshold: 0.7 });
+    
+    statNumbers.forEach(num => statsObserver.observe(num));
+
+    // ===== AI MATCHER DEMO =====
+    const matchBtn = document.getElementById('matchBtn');
+    const issueSelect = document.getElementById('issueSelect');
+    const matchResult = document.getElementById('matchResult');
+    
+    const demoResponses = {
+        contract: "✅ Found 4 contract specialists. <strong>Top match:</strong> Elena R. (9.2★) — $79 video consult, 2h response. <br><small>🔒 Encrypted • Free initial chat</small>",
+        employment: "✅ Found 6 employment lawyers. <strong>Top match:</strong> Marcus T. (9.5★) — Free 15-min intro, then $59. <br><small>📋 Wage dispute expertise • Audio option</small>",
+        startup: "✅ Found 3 startup attorneys. <strong>Top match:</strong> Priya K. (9.7★) — Subscription discount. <br><small>🚀 IP + incorporation bundles • Text support</small>",
+        ip: "✅ Found 5 IP specialists. <strong>Top match:</strong> David L. (9.4★) — Trademark filing from $149. <br><small>™️ Fast-track • AI doc review included</small>",
+        family: "✅ Found 7 family mediators. <strong>Top match:</strong> Sofia M. (9.6★) — Sliding scale $49-$129. <br><small>🏡 Compassionate • Video or audio</small>",
+        immigration: "✅ Found 5 immigration lawyers. <strong>Top match:</strong> Ahmed K. (9.3★) — Consult from $69. <br><small>🛂 Multilingual support • Document help</small>",
+        'real-estate': "✅ Found 4 real estate attorneys. <strong>Top match:</strong> Jennifer L. (9.5★) — Contract review $39. <br><small>🏡 Closing support • AI + human review</small>"
+    };
+    
+    matchBtn.addEventListener('click', () => {
+        const issue = issueSelect.value;
+        
+        if (!issue) {
+            matchResult.innerHTML = "<i class='fas fa-circle-exclamation' style='color:var(--warning)'></i> Please select a legal issue first.";
+            matchResult.classList.add('active');
+            return;
+        }
+        
+        matchResult.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Analyzing your case with AI...";
+        matchResult.classList.add('active', 'loading');
+        
+        // Simulate AI processing delay
+        setTimeout(() => {
+            matchResult.classList.remove('loading');
+            matchResult.innerHTML = demoResponses[issue] || "✅ Experts found! Connecting you now...";
+        }, 1500);
+    });
+
+    // ===== SMOOTH SCROLL FOR ANCHOR LINKS =====
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href === '#') return;
+            
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // ===== INITIAL REVEAL FOR VISIBLE ELEMENTS =====
+    window.addEventListener('load', () => {
+        revealElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+                el.classList.add('active');
+            }
+        });
+    });
+
+    // ===== FORM ENHANCEMENTS (Demo) =====
+    // Add keyboard support for widget select
+    issueSelect?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            matchBtn.click();
+        }
+    });
+</script>
+
+</body>
+</html>
